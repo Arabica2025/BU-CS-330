@@ -1,0 +1,62 @@
+\documentclass[11pt]{article}
+
+\usepackage{fullpage}
+\usepackage{enumitem}
+
+
+\usepackage{amsmath,amsthm,amsfonts,amssymb,mathtools,latexsym}
+\usepackage{xcolor,graphicx,hyperref,float}
+
+
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+
+
+
+\pdfpagewidth 8.5in
+\pdfpageheight 11in 
+
+\oddsidemargin 0in
+\evensidemargin 0in
+
+
+\begin{document}
+	
+\begin{center}
+\Large{\textbf{CS 330, Algorithm Syntax }}
+\end{center}
+
+In this file you can find examples of how to write algorithms in the LaTeX algorithm2e environment. (This environment is included in the preamble we gave.)  You are not required to use this format, but it has a neat look and takes care of things like indentation.\\
+
+
+
+\begin{algorithm}[H]
+\caption{AlgorithmSyntax(input)}
+\tcc{you can add a comment here explaining the input.}
+\tcc{ Use backslash tcc for the comment syntax.}
+$x \gets 8$\tcc{use the backslash gets command for the left arrow, meaning value assignment. }
+$L \gets$ empty list \;
+$G \gets$ empty hash table\;
+\For{condition}{
+ \tcc{don't forget the brackets indicating the body of the loop}
+ do something\;
+\For{condition for nested loop}{
+\tcc{nested loop has brackets too}
+do something\;
+}
+}
+\If{condition}{
+do something\;
+}\ElseIf{elseif condition}{
+do something \;
+}\Else{
+do something \;
+do something else\;
+}
+\While{condition}{
+do something\;
+}
+\Return myoutput
+\end{algorithm}
+
+\end{document}
+

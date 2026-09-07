@@ -1,0 +1,111 @@
+
+\usepackage{fullpage}
+%\usepackage{enumitem}
+\usepackage{paralist}
+
+\usepackage{amsmath,amsthm,amsfonts,amssymb,mathtools,latexsym}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx,hyperref,float}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+
+\usepackage{tikz}
+\usetikzlibrary{trees,shapes.geometric,positioning,arrows.meta}
+
+\usepackage{listings}
+
+  \definecolor{customgreen}{rgb}{0,0.6,0}
+  \definecolor{customgray}{rgb}{0.5,0.5,0.5}
+  \definecolor{custommauve}{rgb}{0.6,0,0.8}
+  
+  \lstset{ 
+    basicstyle=\ttfamily\footnotesize,        % the size of the fonts that are used for the code
+    breaklines=true,                 % sets automatic line breaking
+    commentstyle=\color{customgreen},    % comment style
+    firstnumber=1,                % start line enumeration with line 1000
+    frame=single,	                   % adds a frame around the code
+    keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+    keywordstyle=\color{blue},       % keyword style
+    numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+    numbersep=10pt,                   % how far the line-numbers are from the code
+    numberstyle=\tiny\color{customgray}, % the style that is used for the line-numbers
+    rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+    showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+    showstringspaces=false,          % underline spaces within strings only
+    showtabs=false,                  % show tabs within strings adding particular underscores
+    stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+    stringstyle=\color{custommauve},     % string literal style
+    tabsize=2,	                    % sets default tabsize to 2 spaces
+    title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+  }
+
+
+\usepackage{array}
+\usepackage{multicol}
+\usepackage{booktabs}
+
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+
+
+
+
+
+
+\definecolor{oxblue}{RGB}{0, 30, 150}
+
+
+
+% box around soln
+\newcommand{\answerbox}[1]{\fbox{\textcolor{white}{\rule{#1}{24pt}}}}
+\newcommand{\answerboxshort}[1]{\fbox{\textcolor{white}{\rule{#1}{14pt}}}}
+\newcommand{\answerboxtall}[2]{\fbox{\textcolor{white}{\rule{#1}{#2}}}}
+
+
+\newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{blue}{#1}}
+\SetCommentSty{mycommfont}
+
+
+
+\pdfpagewidth 8.5in
+\pdfpageheight 11in 
+
+\oddsidemargin 0in
+\evensidemargin 0in
+
+
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+\newtheorem{problem}{Problem}
+
+\newcommand{\re}{{\mathbb{R}}}
+\newcommand{\floor}[1]{\lfloor {#1} \rfloor}
+\newcommand{\ceil}[1]{\lceil {#1} \rceil}
+\newcommand{\paren}[1]{\left( {#1} \right)}
+\newcommand{\bparen}[1]{\big( {#1} \big)}
+\newcommand{\Bparen}[1]{\Big( {#1} \Big)}
+
+\newcommand{\set}[1]{\left\{ {#1} \right\}}
+
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\StdDev}{\mathbb{\text{\rm StdDev}}}
+
+
+\newcommand{\adamnote}[1]{\marginpar{{\tiny \sf \color{orange} Adam: {#1}}}}
+
+
+\newenvironment{solution}
+  {\medskip\noindent\color{oxblue}}
+  {\medskip}
+
+\ifnum\showsolutions=0
+    \newsavebox{\discardbox}
+    \renewenvironment{solution}{\setbox\discardbox=\vbox\bgroup}
+    {\egroup}
+\fi 
+
