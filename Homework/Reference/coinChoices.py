@@ -16,8 +16,9 @@ def coinChoices(a,b,c,n):
                     count += 1
                     print ((i,j,k), "is a way to get value", n)
     return count
-print(coinChoices(8,8,8,8))
-# powersoftwo = [2**x for x in range(4,12)]
+# print(coinChoices(8,8,8,8))
+# print(coinChoices(4,4,4,4))
+powersoftwo = [2**x for x in range(4,12)]
 
 # hw1-1(a) Runtime Analysis 
 def runtime():
@@ -58,4 +59,4 @@ def plot():
     plt.show()
 
 
-# plot()
+plot()
