@@ -89,10 +89,38 @@ A[i] = B[i] + B[i+1] + B[i+2] + ... + B[i+r-1]\\
 \end{aligned}
 $$
 - 0-based indexing; $i+r-1$ for upper bound.
-(a) The length of array $A$ is $n - r$.
+(a) The length of array $A$ is $n - r+1$. Because if the bound for $i$ is $0≤i≤n-r$, since it is inclusive and 0-based indexing, we need to add 1 to get the final array length and not loosing the last element of the array $A$.
 (b)
 1st box: `0`
-2nd box: the end of `A`
+2nd box: `A.length`
 3rd box: `i`
-4th box: the end of `B`
+4th box: `i+r`
 5th box: `A[i] + B[j]`
+(c)
+1st box: `1`
+2nd box: `A.length`
+3rd box: `A[i-1] - B[i-1] + B[i+r-1]`
+
+(d)
+Proof by Induction
+Prove $A_i = \Sigma_{k=i}^{i+r-1} B_k$
+1. Base case: $i=0, r=1$
+$$
+\begin{array}{ll}
+A_0 = \Sigma_{k=0}^{0+1}B_k = \Sigma_{k=0}^{1}B_k = B_0+B_1\\\\
+\text{it holds!}
+\end{array}
+$$
+
+2. Inductive Hypothesis: <br>
+If $A_i=\Sigma_{k=i}^{i+r-1}B_k$ holds, then $A_i=\Sigma_{k=i}^{i+r-1}B_{k+1}$ holds.
+
+$$\begin{array}{ll}
+A_i = B_i + B_{i+1} + ... + B_{i+r}\\
+A_{i+1} = B_{i+1} + B_{i+2} + ... + B_{i+r}\\
+A_{i+1}-A_i = -B_i + B_{i+r}\\
+A_{i+1} = A_i-B_i+B_{i+r}
+\end{array}
+$$
+The algorithm has a `for` loop of `O(n)` time complexity that has the same equation as $A_{i+1}$. □
+

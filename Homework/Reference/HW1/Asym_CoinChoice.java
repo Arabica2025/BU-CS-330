@@ -1,4 +1,4 @@
-package Homework.Reference;
+package Homework.Reference.HW1;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;

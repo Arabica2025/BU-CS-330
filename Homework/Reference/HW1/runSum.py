@@ -2,8 +2,8 @@ def SlowFun(B: list[int],r: int) -> list[int]:
     n = len(B)
     A = [0 for _ in range(n-r)]
     for i in range(len(A)):
-        for j in range(n-r-i):
-            A[i] += B[j+i]
+        for j in range(i+r):
+            A[i] += B[j]
     return A
 
 print("SlowFun array A:",SlowFun([1,2,3,4,5],2))
@@ -12,7 +12,7 @@ def FastFun(B: list[int], r: int) -> list[int]:
     n = len(B)
     A = [0 for _ in range(n-r)]
     # B_prime = [0 for _ in range(n)]
-    for i in range(len(B)-r):
+    for i in range(r):
         A[0] += B[i]
         # B_prime[i] = A[0]
         
