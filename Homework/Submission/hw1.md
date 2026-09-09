@@ -79,3 +79,20 @@ Therefore, the runtime of this asymptotically faster algorithm for this problem 
 (c)
 ![hw1-1-a fig](./hw1_1_c_fig.png)
 Initially, `w` value was $5 \times 10^{-8}$ as default. For part (a), I changed the exponent to $-9$, which fits to the original algorithm with time complexity of $O(n^3)$. For the part (c), I did not change `w` value and still able to fit my asymptotically faster algorithm with time complexity of $O(n^2)$. Because `w` value is just an adjustment parameter to make the comparison between the baseline $t=wn^2$ and my algorithm human-friendly and my hardware setup was not changed, I did not have to change `w` value from part (a). One problem I encountered was the data extraction. Since I wrote the algorithm in Java and the original algorithm is in python, I had to come up with an idea that I can put into the plot in python (I don't know how to plot in Java so I had to extract data that can be read cross-linguistically.)
+
+## 2. Running Sum
+### Context
+- Given arrays $A$ and $B$ ($B$ with $n$ elements), 
+$$\begin{aligned}
+A[i] = B[i] + B[i+1] + B[i+2] + ... + B[i+r-1]\\
+\text{for all } i : 0 ≤ i ≤ n-r
+\end{aligned}
+$$
+- 0-based indexing; $i+r-1$ for upper bound.
+(a) The length of array $A$ is $n - r$.
+(b)
+1st box: `0`
+2nd box: the end of `A`
+3rd box: `i`
+4th box: the end of `B`
+5th box: `A[i] + B[j]`
