@@ -1,16 +1,43 @@
 # 1. Colorful Path
+## Pseudocode
 ```pseudocode
 /* G: input adjacency list as a nested hash table */
 /* P: output list of tuples of four nodes that are "colorful" */
-/* Task: */
-P <- empty list[tuple(length of 4)] // initialize the output list P of tuples of four nodes.
+/* For this algorithm, 1-based indexing was used.*/
+/* Task: Design an algorithm that takes as input a graph $G$ and returns all node quadruples that form a "colorful" path (colorful: sequence of red -> blue -> green)*/
 
-for u in G:
-    for v in G[u]:
-        colorful <- empty tuple of length of 4. // create an empty tuple to record the possible permutation
+ColorfulPath(G):
+    P <- empty list[tuple(length of 4)] // initialize the output list P of tuples of four nodes.
 
+    for u in G:
+        for v in G[u]: // first 2 nested for loops: n+m operations
 
+            colorful <- empty tuple of length of 4. // create an empty tuple to record the possible permutation
+            if (G[u][v] == 'r' AND G[v][u]=='r'): // checking if the edge between $u$ and $v$ is red (undirected; we have to check both)
+                colorful[1] <- G[u][v] // put $u$th node into the tuple: initial node $u$
+                colorful[2] <- G[v][u] // put $v$th node into the tuple: $u$ connected with $v$
+
+                /* third nested for loop: D operations*/
+                for r in G[v]: // we have to iterate through $v$th dictionary or edges of node $v$ to look for 'blue' edge
+                    if (G[v][r]=='b' AND G[r][v] == 'b'): // checking if the edge between $v$ and $r$ is blue (undirected; we have to check both)
+                        colorful[3] <- G[v][r] // if it's red->blue, put $r$th node into the tuple: $v$ connected with $r$
+
+                        /*fourth nested for loop: D operations*/
+                        for b in G[r]: // we have to iterate through $r$th dictionary or edges of node $r$ to look for 'green' edge
+                            if (G[r][b] == 'g' AND G[b][r]=='g'): // checking if the edge between $r$ and $b$ is green (undirected; we have to check both)
+                                colorful[4] <- G[r][b] // if it's red->blue->green, puth $b$th node into the tuple: $r$ connected with $b$
+                                P.append(colorful) // now that we have a "colorful" tuple, append the tuple to list $P$; this operation is repeated until the whole loops terminate
+    return P // after appending all possible tuples, return the list of tuples.
 ```
+## Runtime Analysis
+1. $O(1)$: initialize the empty list of tuples of four nodes ($P$) to return 
+2. $O(n+m)$: first two nested for loops that iterates through the end of the input nested hash table $G$. Since the length of each Node is different, the upper bound of these two nested loops would be $n+m$. <br>
+    2-1. $O(1)$: initialize the empty tuple of length of 4 for "colorful" tuple of 4 to filter only the "colorful" ones. Put first 2 nodes $u$ and $v$ into `colorful` tuple. At this point, we can find red.<br>
+    2-2. $O(D)$: loop through the edges of Node $v$ to look for proceeding color. Put third node $r$ into `colorful` tuple. At this point, we can find red->blue.<br>
+        2-2-1. $O(D)$: loop through the edges of Node $r$ to look for proceeding color. Put fourth node $b$ into `colorful` tuple. At this point, we can find red->blue->green.<br>
+        2-2-2. $O(1)$: Since we found 1 "colorful" path, append the tuple to the list
+
+To sum all the steps, at maximum, there can be $n + m(D \cdot D)$ operations for this algorithm. Therefore, the running time of `ColorfulPath(G)` is $O(n+mD^2)$.
 
 # 2. Part 1: Asymptotics
 
