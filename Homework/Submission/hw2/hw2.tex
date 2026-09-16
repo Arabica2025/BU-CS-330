@@ -1,0 +1,184 @@
+\documentclass[11pt]{article}
+
+\usepackage{fullpage}
+\usepackage{enumitem}
+
+\usepackage{amsmath,amsthm,amsfonts,amssymb,mathtools,latexsym}
+\usepackage{xcolor,graphicx,hyperref,float}
+
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+
+\pdfpagewidth 8.5in
+\pdfpageheight 11in 
+
+\oddsidemargin 0in
+\evensidemargin 0in
+
+
+\begin{document}
+	
+\begin{center}
+\Large{\textbf{Homework 2}}
+\end{center}
+
+\section{Colorful Path}
+\subsection{Pseudocode}
+
+\begin{algorithm}[H]
+\small
+\caption{ColorfulPath(G)}
+\tcc{G: input adjacency list as a nested hash table}
+\tcc{P: output list of tuples of four nodes that are "colorful"}
+\tcc{For this algorithm, 1-based indexing was used.}
+\tcc{Task: Design an algorithm that takes as input a graph $G$ and returns all node quadruples that form a "colorful" path (colorful: sequence of red -> blue -> green)}
+
+$P \gets$ empty list[tuple(length of 4)] \tcc{initialize the output list P of tuples of four nodes} \
+\For{u in G}{
+    \For{v in G[u]}{
+        \tcc{first 2 nested for loops: $n+m$ operations}
+        $colorful \gets$ empty tuple of length of 4. \tcc{create an empty tuple to record the possible permutation}
+        \If{G[u][v] == 'r' AND G[v][u] == 'r'}{ \tcc{checking if the edge between $u$ and $v$ is red (undirected; we have to check both)}
+            $colorful[1] \gets G[u][v]$ \tcc{push $u$th node into the tuple: initial node $u$}
+            $colorful[2] \gets G[v][u]$ \tcc{put $v$th node into the tuple: $u$ connected with $v$}
+            \
+            \tcc{third nested for loop: $D$ operations}
+            \For{r in G[v]}{ \tcc{we have to iterate through $v$th dictionary or edges of node $v$ to look for 'blue' edge}
+                \If{G[v][r] == 'b' AND G[r][v] == 'b'} { \tcc{checking if the edge between $v$ and $r$ is blue (undirected; we have to check both)} 
+                    $colorful[3] \gets G[v][r]$ \tcc{if it's red->blue, put $r$th node into the tuple: $v$ connected with $r$}
+
+                    \tcc{fourth nested for loop: $D$ operations}
+                    \For{b in G[r]}{
+                        \tcc{we have to iterate through $r$th dictionary or edges of node $r$ to look for 'green' edge}
+                        \If{G[r][b] == 'g' AND G[b][r] == 'g'}{
+                            \tcc{checking if the edge between $r$ and $b$ is green (undirected; we have to check both)}
+                                $colorful[4] \gets G[r][b]$ \tcc{if it's red->blue->green, puth $b$th node into the tuple: $r$ connected with $b$}
+                                $P.append(colorful)$ \tcc{now that we have a "colorful" tuple, append the tuple to list $P$; this operation is repeated until the whole loops terminate}
+                        }
+                    }
+                }
+            }
+
+        }
+
+    }
+}
+return $P$ \tcc{after appending all possible tuples, return the list of tuples.}
+\end{algorithm}
+
+\subsection{Runtime Analysis}
+\begin{enumerate}[label=\arabic*.]
+    \item $O(1)$: initialize the empty list of tuples of four nodes ($P$) to return.
+    \item $O(n+m)$: first two nested for loops that iterates through the end of the input nested hash table $G$. Since the length of each Node is different, the upper bound of these two nested loops would be $n+m$.
+    \begin{enumerate}[label=\arabic{enumi}-\arabic*.]
+        \item $O(1)$: initialize the empty tuple of length of 4 for "colorful" tuple of 4 to filter only the "colorful" ones. Put first 2 nodes $u$ and $v$ into \texttt{colorful} tuple. At this point, we can find red.
+        \item $O(D)$: loop through the edges of Node $v$ to look for proceeding color. Put third node $r$ into \texttt{colorful} tuple. At this point, we can find red$\to$blue.
+        \begin{enumerate}[label=\arabic{enumi}-\arabic{enumii}-\arabic*.]
+            \item $O(D)$: loop through the edges of Node $r$ to look for proceeding color. Put fourth node $b$ into \texttt{colorful} tuple. At this point, we can find red$\to$blue$\to$green.
+            \item $O(1)$: Since we found 1 "colorful" path, append the tuple to the list.
+        \end{enumerate}
+    \end{enumerate}
+\end{enumerate}
+To sum all the steps, at maximum, there can be $n + m(D \cdot D)$ operations for this algorithm. Therefore, the running time of `ColorfulPath(G)` is $O(n+mD^2)$.
+
+\section{Part 1: Asymptotics}
+\subsection{$f(n)=n^{0.9} \text{ and } g(n)=\sqrt{2n}$}
+Answer: $f(n)=O(g(n))$
+If we rewrite $g(n)$, 
+$$
+\begin{array}{ll}
+\sqrt{2n}\\
+=(2n)^{0.5}\\
+=2^{0.5} \times n^{0.5}\\\\
+\text{Let } c=2^{0.5}\text{ and } n_0 = 0 \text{ and } n_1 = 1\\
+
+\text{Case 1: }n_0=1\\
+f(n) = 1^{0.9}=1 < g(n) = 2^{0.5} \times 1^{0.5} = \sqrt{2}\\
+\text{Case 2: }n+1 = 2\\
+f(n) = 2^{0.9} < g(n) = 2^{0.5} \times 2^{0.5} = 2
+\end{array}
+$$
+
+So, there exist constants $c = 2^{0.5}>0$ and $n_0=1$ such that
+$\forall n \ge n_0,f(n) \le c \cdot g(n)$.
+Therefore, $f(n) = O(g(n))$.
+
+\subsection{$f(n)=2^n+n^2 \text{ and } g(n)=n^6$}
+Answer: $g(n)=O(f(n))$
+
+According to the growth-rate rule of thumb,
+$$\begin{array}{ll}
+n^c <<a^n \text{ for any constant }c>0,a>1\\
+\text{Let }c=6,a=2\\
+\\
+n^c = n^6 = g(n) << a^n = 2^n\\
+\text{For the remainder of f(n), }n^2 \text{ can be ignored.}\\
+lim_{n \rightarrow \infty} \frac{f(n)}{g(n)} = \frac{2^n+n^2}{n^6} > 0 \text{ such that } f(n) = \Omega(g(n)).\\
+\end{array}
+$$
+
+Therefore, $f(n) = \Omega(g(n))$ such that $g(n) = O(f(n))$.
+
+\subsection{$f(n)=log_2(n), g(n)=log_2(n^2+n)$}
+Answer: $f(n) = O(g(n))$
+$$\begin{array}{rl}
+g(n) = log_2(n^2+n)\\
+=log_2(n(n+1))\\
+= \text{(Use log product rule) }log_2(n)+log_2(n+1)\\
+\text{So, }f(n) \le c\cdot g(n) \text{ for any constant }c > 0, n_0
+\end{array}
+$$
+Therefore, $f(n) = O(g(n))$.
+
+\subsection{$f(n) = n^2log_2(n), g(n) = n^2 \cdot \sqrt{n}$}
+Answer: $g(n) = O(f(n))$
+$$\begin{array}{rl}
+lim_{n \rightarrow \infty}\frac{f(n)}{g(n)} = \frac{n^2log_2(n)}{n^2 \cdot \sqrt{n}}\\
+= \frac{log_2(n)}{\sqrt{n}} = \frac{log_2(n)}{n^{0.5}}\\
+\\
+\text{According to growth-rate rule of thumb: }\\
+log(n) <<n^c = log_2(n)<<n^0.5\\
+\text{So, }\frac{log_2(n)}{n^{0.5}} > 0\\
+\text{So, }f(n) = \Omega(g(n)) 
+\end{array}
+$$
+Therefore, $g(n) = O(f(n))$.
+
+\section{Part 2: Runtime Analysis}
+\subsection{Basic Merging}
+\begin{enumerate}[label=\arabic*.]
+\item $O(1)$ to initialize the empty list $C$.
+\item`while` loop until either list $A$ or $B$ is empty to remove the smaller of the first elements of $A$ and $B$ and append it to $C$. The worst case would be to iterate through the end of BOTH $A$ and $B$ lists ($O(ab)$)
+\item there are three cases of append task:
+    \begin{enumerate}[label=\arabic*.]
+    \item $a>b$
+    \begin{enumerate}[label=\arabic*.]
+        \item In this case, the append job would take $O(a-b)$ times.
+    \end{enumerate}
+    \item $b>a$
+    \begin{enumerate}[label=\arabic*.]
+        \item In this case, the append job would take $O(b-a)$ times.
+    \end{enumerate}
+    \item $a=b$
+    \begin{enumerate}[label=\arabic*.]
+        \item In this case, we do not have append task.
+    \end{enumerate}
+\end{enumerate}
+\end{enumerate}
+Therefore, $O(1) + O(ab) +$ and either $O(a-b)$ or $O(b-a) = O(ab)$.
+
+\subsection{Merging $k$ Sorted Lists}
+$O(n)$ for the first initialization of $R$ by copying $L_1$.
+For the worst case, the upper bound of the `for` loop operation would be $(k-1)n^2$ as the $\text{Merge}(R,L_i)$ Operation is $O(n^2)$ and we repeat for $k-1$ times. We subtract the number of `Merge` operation by 1 as we already did once for the initialization.
+Therefore, it is $O(n) + O((k-1)n^2) = O(k \cdot n^2)$.
+
+\subsection{Counting Colors}
+$O(1)$ for initializing the color counters.
+The graph $G$ is a nested hash table that its length is the number of nodes $n$ and the length of "dictionary" at each index is the number of edges $m$.
+
+\begin{enumerate}[label=\arabic*.]
+    \item the outer loop (`for u in G do`): loop through the entire nodes in the graph so the outer iteration operates $n$ times.
+    \item the inner loop (`for v in G[u] do`): loop through edges connected to each node. The number of connected edges to nodes can be different. However, in the end, we have to loop for the number of edges, $m$, between the nodes in the graph.
+\end{enumerate}
+
+Therefore, the running time of `ColorCounting(G)` is $O(n+m)$.
+\end{document}
