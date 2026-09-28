@@ -1,0 +1,82 @@
+\documentclass[11pt]{article}
+
+\input{../preamble}
+
+
+\begin{document}
+	
+\begin{center}
+\Large{\textbf{CS 330, Fall 2026, Homework 4 \\
+Due Wednesday, September 30, 2026 \\
+}}
+\end{center}
+
+\emph{For full credit, you must follow the guidelines laid out on the first page of homework 1.}\\
+
+
+\begin{problem}
+Elvish languages of Middle-Earth (10 points)
+\end{problem}
+
+J.R.R. Tolkien, the author of the famous trilogy Lord of the Rings, was also a professor of philology (the study of language in oral and historical sources). Along with his novels he developed the mythology and origin of Middle-Earth and constructed multiple of its languages~\footnote{\url{https://en.wikipedia.org/wiki/Languages_constructed_by_Tolkien}}. He created the entire Elvish language family with 15 languages, grammar and vocabulary. The most famous of this is the inscription in the One Ring
+
+\begin{center}
+ \includegraphics[width=.39\textwidth]{One_Ring_inscription.png}
+\end{center}
+
+Recently Tolkien scholars have discovered a so far unknown manuscript which they suspect contains the description of another new language. The language consist of characters never seen by the scholars. There is a list of strings, a.k.a. ``words'' that the scholars believe are written in alphabetical order. Help the scholars decipher what the alphabet might look like and what the alphabetical order among the characters might be.\\
+
+We call the discovered language \emph{developed} if we can indeed infer an alphabetical order from the manuscript (note that there may be multiple valid orders). If we cannot, then the language is \emph{incomplete}.
+
+\textbf{Example 1:} a $\mathit{developed}$ language.
+\begin{itemize}
+    \item $\$\%\%*$
+    \item $\&\&\#\&$
+    \item $\&\&\#@$
+\end{itemize}
+One possible ordering of characters is $\$,\&,@,\%, *, \#$. (Check  for yourself that the words are indeed in alphabetical order.)\\
+
+\textbf{Example 2:} an  $\mathit{incomplete}$ language.
+\begin{itemize}
+    \item $\$\%\%*$
+    \item $\&\&\#\&$
+    \item $\&\&\#\$$
+\end{itemize}
+The second example depicts an invalid list. This is because, if the first two words are in sorted order, then we must have $\$$ before $\&$; but if the final two words are in sorted order, then we must have $\&$ before $\$$, which is a contradiction. 
+
+Note that you are not guaranteed that every letter will appear in the first position (refer to the examples above).\\
+
+\begin{enumerate}
+    \item This problem can be represented as a graph problem.  Write an algorithm that takes as input the manuscript $M$.  $M$ is a  nested \emph{array}, such that $M[i]$ consists of the character array of word $i$, e.g.  the first entry in example 1 is $M[0] = [\$,\%,\%,*]$. You may assume that all words are unique.  The output should be the graph adjacency list $G$ as a nested hash table.  $M$ consists of $W$ words and the language consists of $L$ distinct characters. For simplicity we assume that the length of each word is the same constant $c$. (Note, that it is possible that this graph is disconnected, or even may contain singleton nodes.)\\
+    \item Write an algorithm that takes as input $G$ and either returns  the characters in alphabetical order if such an order exists, or return ``no alphabetical order''. If there are multiple possible orders, than any one of those is acceptable.
+
+\end{enumerate}
+
+
+
+
+\begin{problem}
+Trip planning
+\end{problem}
+
+You are planning a vacation in a faraway country, and are looking at the train schedules in that country. 
+The train schedule $train$ is made up of a set of $n$ $4$-tuples.
+\begin{align*}
+    train(i)=(depcity(i),arrcity(i),dep(i),arr(i))
+\end{align*}
+In the above schedule, $depcity$ and $arrcity$ are the cities that train $i$ leaves from and arrives in, 
+respectively, and $dep$ and $arr$ represent the time that it does those two things. Basically, train $i$ 
+leaves $depcity(i)$ at time $dep(i)$, and arrives in $arrcity(i)$ at time $arr(i)$.
+
+
+
+
+Suppose you want to start at time $0$ in a particular city $s$, and wanted to see how quickly you could get to 
+each city from your starting city. Write an algorithm that takes as input the train schedule $train$ and the starting city $s$ and efficiently finds the earliest arrival times to each city. Explain why it is correct.
+
+Remember that this is a train schedule, and so you cannot catch a train if you arrive later at a city 
+than it leaves.
+
+
+
+\end{document}
