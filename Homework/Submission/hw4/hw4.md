@@ -98,7 +98,60 @@ According to ZeroIndegree algorithm, if it returns the topological order, then
 First, because alphabetical order does not allow a cycle as it would require a character to precede itself, if something is in alphabetical order, then that is acyclic. If an order is acyclic, then it can be represented as DAG. According to the ZeroIndegree Algorithm, it must remove every node and return a topological order that contains all $L$ distinct characters from $G$. By the definition of topological order, every edge from one node to another--$u \rightsquigarrow v$-- must place $u$ before $v$. Each edge represents the relationship of the first different character of consecutive word; therefore, every consequtive pair of distinct character is alphabetically ordered. Second, if the algorithm detects a cycle, since there exists no pairs that has a character that precede itself by the algorithm, the algorithm will simply not delete all nodes in $G$ and return "no alphabetical order." 
 
 # 2. Trip planning
+## Pseudocode
+```pseudocode
+TrainPlan(train, s):
+/*
+goal: find the earliest arrival times to each city from starting city $s$ to its reachable cities only
+input: 
+    1) train: set of $n$ 4-tuples.
+    $$train(i) = (depcity(i), arrcity(i), dep(i), arr(i))$$
+    - $depctiy$: list of departure cities
+    - $arrcity$: list of arrival cities
+    - $dep$: list of departure time
+    - $arr$: list of arrival time
+    2) s: starting city 
+output:
+    earliestArr: list of earliest arrival time to each city from $s$.
+* earliest arrival time list includes arrival time to the starting city itself.
+How to approach this problem:
+    - to find the earliest arrival time of each city from the starting city, we need to rearrange the schedule for comparison by ascending departure time from earliest to latest. Even though we are trying to get arrival time, departure time should be earliest to minimize the arrival time as we compare to the same time interval schedule for same line or edge.
+    - sort the schedule by departure time (early -> late)
+    - to fit the tightest schedule for earliest arrival, it is okay as long as the departure time to the next connecting city is greater or equal to the arrival time to the current city.
+    - if the above condition is satisfied, then we just put the arrival time of that schedule.
+*/
+    // first, sort the $train$ list by ascending departure time to squeeze in the schedule
+    MergeSortByDep(train) // mergesort algorithm for sorting. since the return value must contain all elements in train, the argument should be $train$, not subset of train that only contains the departure time
 
+    // now initialize the return table
+    earliestSchedule <- empty hash table // return value: bunch of earliest arrival times to each city from the starting city $s$.
+    // initialize the table with infinity
+    // $train$ is a set of $n$ 4-tuples. so there are $n$ elements in $train$.
+    for i=0 in range(n):
+        earliestSchedule[train[i][0]] <- ∞
+        earliestSchedule[train[i][1]] <- ∞
+    earliestSchedule[s] <- 0 // first, set starting city arrival time to 0. (shortest arrival from itself is 0)
 
+    // Greedy algorithm: getting earliest arrival    
+    for (depcity, arrcity, dep, arr) in train:
+        if earliestSchedule[depcity] <= dep:
+            earliestSchedule[arrcity] <- min(earliestSchedule[arrcity], arr)
+    return earliestSchedule
+```
+## Runtime Analysis
+1. $O(nlogn)$: Mergesort is $O(nlogn)$ for all of best, average, and worst case.
+2. $O(n)$: initializing earliest schedule hash table with infinity.
+3. $O(n)$: greedy algorithm that gets us the earliest arrival time from $s$ to each city.
 
+Therefore, the total runtime of the algorithm is $O(nlogn) + O(n) + O(n) = O(nlogn)$.
 
+## Proof of Correctness
+For the algorithm to be correct, it must:
+1. return an each city's earliest arrival time for all connected ciies to the starting city $s$, and
+2. return a list of earliest arrival order that the arrival to a city $u$ must be eariler than or at the same time as the departure from $u$ to another city $v$.
+
+Proof by Induction
+1. Base case: the earliest arrival time to reach to the first input city, $s$, is 0. Otherwise, $\infty$, indicating not reached yet.
+2. Inductive Hypothesis: if $k$ train trips are in ascending departure time order, then earliestSchedule[arrcity] is the earliest arrival time from $s$ to $arrcity$ for $k$ train trips. 
+Considering $k+1$ train trips, if the arrival time to the city $u$ is greater than departure time from the city u$, then it is not the eariliest arrival. Otherwise, we can catch the connecting trip and the earliest arrival we can get is the min(earliestSchedule[u], arr) that the algorithm ensures earliestSchedule table to favor the earlier arrival time such that it will minimize the arrival time to any city from the starting city $s$.
+Therefore, the algorithm always outputs the correct result.
