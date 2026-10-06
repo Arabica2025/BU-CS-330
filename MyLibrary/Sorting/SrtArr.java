@@ -166,4 +166,52 @@ public class SrtArr implements SrtArrInterface{
         int[] temp = new int[arr.length];
         mSort(arr, temp, 0, arr.length - 1);
     }
+
+    /* MergeSort Generic */
+    @Override
+    public <T> void mergeSort(T[] arr, ToIntBiFunction<T, T> comp) {
+        T[] temp = arr.clone();
+        mSort(arr, temp, 0, arr.length - 1, comp);
+    }
+    /* MergeSort Generic helper */
+    private <T> void mSort(T[] arr, T[] temp, int start, int end, ToIntBiFunction<T, T> comp) {
+        if (start >= end) {
+            return;
+        }
+        
+        int middle = (start + end)/2;
+        mSort(arr, temp, start, middle, comp);
+        mSort(arr, temp, middle + 1, end, comp);
+        merge(arr, temp, start, middle, middle + 1, end, comp);
+    }
+    private <T> void merge(T[] arr, T[] temp, 
+      int leftStart, int leftEnd, int rightStart, int rightEnd, ToIntBiFunction<T, T> comp)
+    {
+        int i = leftStart;    // index into left subarray
+        int j = rightStart;   // index into right subarray
+        int k = leftStart;    // index into temp
+        
+        while (i <= leftEnd && j <= rightEnd) {
+            if (comp.applyAsInt(arr[i], arr[j]) < 0) {
+                temp[k] = arr[i];
+                i++; k++;
+            } else {
+                temp[k] = arr[j];
+                j++; k++;
+            }
+        }
+        
+        while (i <= leftEnd) {
+            temp[k] = arr[i];
+            i++; k++;
+        }
+        while (j <= rightEnd) {
+            temp[k] = arr[j];
+            j++; k++;
+        }
+        
+        for (i = leftStart; i <= rightEnd; i++) {
+            arr[i] = temp[i];
+        }
+    }
 }

@@ -1,4 +1,5 @@
 package MyLibrary.Sorting;
+import java.util.function.ToIntBiFunction;
 
 interface SrtArrInterface{
     /* 1. Sorting with arrays as argument */
@@ -22,4 +23,5 @@ interface SrtArrInterface{
     Quick Sort: Worst: O(n^2) times, avg, best: O(n log n) time, O(log n) space (average), O(n^2) space (worst)
     Merge Sort: O(n log n) time, O(n) space
     */
+    <T> void mergeSort(T[] arr, ToIntBiFunction<T,T> comp);
 }
