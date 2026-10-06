@@ -1,0 +1,76 @@
+\documentclass[11pt]{article}
+
+\input{../preamble}
+
+\usepackage{enumitem}
+\newcounter{probnumcount}
+\setcounter{probnumcount}{1}
+\newcommand{\probnum}{\arabic{probnumcount}. \addtocounter{probnumcount}{1}}
+
+
+\begin{document}
+	
+\begin{center}
+\Large{\textbf{CS 330, Fall 2026, Homework 5 \\
+Due Wednesday, October 7, 2026 \\
+}}
+\end{center}
+
+\emph{For full credit, you must follow the guidelines laid out on the first page of homework 1.}\\
+
+
+\subsection*{\probnum Job Fair Speedrun}
+
+Boston University is hosting a massive Job Fair, and you are on a mission: hand out your CV and do an awkward-but-professional handshake with \emph{every} employer. Unfortunately, every employer at the job fair has taken CS 330, so they are terrifyingly efficient with their time management.
+
+Employer $i\in\{1,\dots,n\}$ will only be at their booth during the time interval $[s_i,f_i]$ (continuous time). If you show up at any time $t\in[s_i,f_i]$, you successfully shake hands with employer $i$ (and possibly receive a sticker or a tote bag).
+
+You want to find an \textit{acceptable} set of visit times $\{t_1,\dots,t_k\}$ such that each employer's interval $[s_i,f_i]$ contains at least one $t_j$ (i.e., $s_i \leq t_j \leq f_i$). Your goal is to minimize $k$, the number of visits to the job fair.
+
+In the example of Figure~\ref{fig:visits}, the black vertical lines mark a set of acceptable visit times. Removing any one of them would make the set not acceptable. (But it is still not the smallest acceptable set.) 
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[height=1in]{hw4-1.pdf}
+    \end{center}
+    \caption{An acceptable set of four visit times.}\label{fig:visits}
+\end{figure}
+
+\begin{enumerate}[label=(\alph*)]
+\item (Do not hand in) Find a smallest acceptable set of attendance times for the example in Figure~\ref{fig:visits}.
+
+
+
+\item Your friend suggests a greedy strategy: always pick the time that covers the largest number of remaining employers. Give an example where this fails to find the minimum hitting set.
+
+
+\item Another friend observes: “If the input contains $k$ mutually disjoint intervals, then every acceptable set of visit times must have size at least $k$.” Is she right? Prove or disprove.
+
+
+
+\item Design a polynomial-time algorithm that, given $[s_1,f_1],\dots,[s_n,f_n]$, outputs a minimum-size set of visit times. [\textit{Hint:} modify the interval scheduling algorithm.]
+
+
+
+\item What is the running time of your algorithm in term of $n$?
+
+
+\item Prove your algorithm is correct. [\textit{Hint:} Use the lower-bound observation from part (c).]
+
+
+
+\end{enumerate}
+
+
+\subsection*{\probnum Earliest Interval}
+Suppose you are given a set of closed intervals $[s_i,f_i]$ for $i=1,\dots,n$. For simplicity, assume that all start and finish times are distinct (that is, there are no repetitions in the list $T=\{s_1,\dots,s_n,f_1,\dots,f_n\}$). For each finish time, we want to find the earliest-starting interval that contains that finish time. More concretely, given $f_k$, find an index $j$ such that
+\[
+f_k\in[s_j,f_j],
+\]
+and among all such intervals, $s_j$ is as small as possible.
+Design an algorithm that outputs such an index for each finish time. The output may be given as $A$, a list of $n$ indices such that for the $k$th finish time, $A[k]$ is the value of the index you are asked to find. 
+
+
+
+
+\end{document}
