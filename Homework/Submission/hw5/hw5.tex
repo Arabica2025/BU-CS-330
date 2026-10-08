@@ -1,0 +1,204 @@
+\documentclass[11pt]{article}
+
+\usepackage{fullpage}
+\usepackage{enumitem}
+
+\usepackage{amsmath,amsthm,amsfonts,amssymb,mathtools,latexsym}
+\usepackage{xcolor,graphicx,hyperref,float}
+
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+
+\pdfpagewidth 8.5in
+\pdfpageheight 11in 
+
+\oddsidemargin 0in
+\evensidemargin 0in
+
+
+\begin{document}
+	
+\begin{center}
+\Large{\textbf{Homework 5}}
+\end{center}
+
+\section{Job Fair Speedrun}
+\subsection{a}
+smallest acceptable set of attendance times for the example in Fig1: 3
+\subsection{b}
+counterexample to find the minimum hitting set counted by always picking the time that covers the largest number of remaining employers:
+\[
+\begin{array}{c|cccccccccc}
+\text{Time} & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+\hline
+A & \bullet & - & \bullet & & & & & & & \\
+B & & \bullet & - & - & - & \bullet & & & & \\
+C & & \bullet & - & - & - & \bullet & & & & \\
+D & & & & & \bullet & - & - & - & \bullet & \\
+E & & & & & \bullet & - & - & - & \bullet & \\
+F & & & & & & & & \bullet & - & \bullet
+\end{array}
+\]
+
+Greedy picks $t=4$, covering B, C, D, and E (the maximum overlap of four). A and F require two additional visits, for three visits total. The optimal solution uses only $t=1$ and $t=8$, covering all six intervals.
+
+\subsection{c}
+If the input contains $k$ mutually disjoint intervals, then every acceptable set of visit time smust have size at least $k$. 
+Proof by contradiction
+\subsubsection{Claim}
+The minimum requirement for an \emph{acceptable} set of time visit is that each employer's interval $[s_i, f_i]$ contains at least one $t_j$ such that $s_i \le t_j \le j_i$. 
+\subsubsection{Proof by Contradiction}
+Suppose if the input contains $k$ mutually disjoint intervals, then every acceptable set of visit times has size less than $k$.
+
+If every interval is mutually disjoint, then $f_{i-1} < s_i$ and $f_i < s_{i+1}$ such that $[s_{i-1}, f_{i-1}] \cap [s_i, f_i] \cap [s_{i+1}, f_{i+1}] = \emptyset$.
+
+So, $t_j$ that $s_i \le t_j \le f_i$ cannot exist in neither $[s_{i-1},f_{i-1}]$ nor $[s_{i+1}, f_{i+1}]$ such that there must exist at least one visit time $t$ for each interval for mutually disjoint set.
+
+Therefore, if there are $k$ mutually disjoint intervals, then the least number of $t$ must be $k$. This contradicts the supposition.
+
+QED.
+
+
+\subsection{d}
+\begin{algorithm}[H]
+\small
+\SetAlgoNoEnd
+\DontPrintSemicolon
+\caption{JFS(timetable: list[list[int,int]]) $\to$ list[int]}
+\texttt{Interval <- empty Priority Queue with minheap of ascending finishing time}\;
+\BlankLine
+\texttt{// set time interval as priority queue with minheap of earliest finishing time}\;
+\texttt{for i in range(timetable.length):}\;
+\Indp
+\texttt{Interval.enqueue(timetable[i])}\;
+\BlankLine
+\Indm
+\texttt{opt\_interval <- empty nested list}\;
+\texttt{min <- 0}\;
+\texttt{while !Interval.isempty():}\;
+\Indp
+\texttt{opt\_interval[min][0] <- Interval.extract\_min() // if the PQ is not empty, then there is always the leftover. initialize the interval list with the first interval}\;
+\texttt{count <- 1 // counter for optimizing the number of visit times; counting the overlaps}\;
+\BlankLine
+\texttt{while !Interval.isempty():}\;
+\Indp
+\texttt{if Interval.get\_min()[0] > opt\_interval[min][0][1]: // if s\_\{i+count\} \ensuremath{\le} f\_\{i\}, then overlap. Otherwise, disjoint.}\;
+\Indp
+\texttt{break}\;
+\Indm
+\texttt{opt\_interval[min][count] <- Interval.extract\_min() // we remove the previous compared interval; the final length of opt\_interval will be the minimum(optimized) number of visit times}\;
+\texttt{count <- count + 1}\;
+\Indm
+\texttt{min <- min + 1}\;
+\BlankLine
+\Indm
+\texttt{acceptable <- empty list[int]}\;
+\texttt{for i in range(opt\_interval.length):}\;
+\Indp
+\texttt{acceptable[i] <- intersection(opt\_interval[i])}\;
+\Indm
+\texttt{return acceptable}\;
+\BlankLine
+\end{algorithm}
+
+\begin{algorithm}[H]
+\small
+\SetAlgoNoEnd
+\DontPrintSemicolon
+\caption{intersection(opt\_interval\_i)}
+\texttt{intersect <- opt\_interval\_i[0][0] // initialize with first element}\;
+\texttt{for i = 1; i < opt\_interval\_i.length; i++ \{}\;
+\Indp
+\texttt{intersect <- max(intersect, opt\_interval\_i[i][0])}\;
+\Indm
+\texttt{\}}\;
+\texttt{// intersection among the overlaps: maximum starting time among the intervals. if that equals the finish time of the first interval, be that as the intersection time.}\;
+\texttt{return intersect}\;
+\end{algorithm}
+
+\subsection{e}
+\begin{enumerate}
+\item $O(logn)$: Priority Queue enqueue takes $O(logn)$ average and worst case for each. upper bound is $O(nlogn)$.
+\item $O(nlogn)$: we loop through all of the nodes in the Priority Queue once so that it iterates $n$ times. However, as we extract minimum from the minheap, we have to reallocate the nodes in ascending finishing time that takes $logn$ times.
+\item $O(n)$: getting acceptable times from the minimum(optimal) time visit intersections takes $n$ times worst case.
+\end{enumerate}
+
+$O(logn) + O(nlogn) + O(n) = O(nlogn)$.
+Therefore, the total runtime of the algorithm is $O(nlogn)$.
+
+\subsection{f}
+Proof of Correctness
+To prove the correctness of the algorithm:
+\begin{enumerate}
+\item There must be at least one acceptable visit time for each interval.
+\item set of acceptable visit times must be in minimum size
+\item the acceptable set of visit times must cover all time intervals given as input.
+\end{enumerate}
+
+First, the algorithm intitializes the priority queue Interval with the first element of leftover time interval for every outer iteration. Then, we assign the optimal time visit for every group of time intervals that can have an acceptable visit time. Because each assigned optimal time visit must intersect all of the time intervals within the same group, there is at least one acceptable visit time for each interval. This leads to the conclusion that the acceptable set of visit times covers all groups of the time intervals given as input. 
+
+Moreover, according to the lower bound of the set of acceptable visit times, the algorithm must output $k$ visit times for $k$ mutually disjoint intervals. the inner loop of while ensures that the groups get separated by disjoints such that there is a mutual disjoint between the groups. Therefore, by the lower bound proven at part (c), the minimum number of visit time must be the length of opt\_interval. Iterating by the length of opt\_interval to get the visit times, the algorithm ensures that there are only miniumu number of visit times in the output.
+
+Therefore, the algorithm output is always correct.
+\section{Earliest Interval}
+\subsection{Pseudocode}
+\begin{algorithm}[H]
+\small
+\SetAlgoNoEnd
+\DontPrintSemicolon
+\caption{EarlyInterval(T: list[list[int, int]]) $\to$ list[int]}
+\texttt{/* Goal: for each finish time, get the earliest-starting interval that contains that finish time. (f\_k \textbackslash{}in [s\_j, f\_j]). output a list of n indices such that for the kth finish time, A[k] is the value of the index asked to find}\;
+\BlankLine
+\texttt{T: list of intervals ([s\_i,f\_i])}\;
+\texttt{*/}\;
+\BlankLine
+\texttt{EFT <- EFT(range(T.length)) // sort T's intervals' indices by EFT first. \$\textbackslash{}Theta(nlogn)\$}\;
+\BlankLine
+\texttt{EIList <- initialize Priority Queue with minheap ordered by EST}\;
+\BlankLine
+\texttt{for priorityidx in range(T):}\;
+\Indp
+\texttt{EIList.insert(priorityidx, T[priorityidx][0]) // id, key pair for Priority Queue; id: priority integer, key: starting times}\;
+\BlankLine
+\Indm
+\texttt{/* now we have a priority queue sorted by EST(EIList) and a nested list sorted by EFT(EFT)*/}\;
+\BlankLine
+\texttt{A <- empty index list}\;
+\texttt{// this iterates O(n) worst time}\;
+\texttt{for k in range(EFT.length):}\;
+\Indp
+\texttt{i <- EFT[k] // we need to iterate through EFT interval to find what intervals belong to which each EST interval}\;
+\texttt{f <- T[i][1] // finish time to compare}\;
+\BlankLine
+\texttt{while T[EIList.get\_min()[0]][1] < f: // while finish time of EST is less than the EFT finish time; if finish time of EST is less than the EFT finish time, then that EST interval will never be used to entail the finish time of any interval so we subtract his ass.}\;
+\Indp
+\texttt{EIList.extract\_min() // if the condition met, we are sure that this belongs to no interval so out}\;
+\BlankLine
+\Indm
+\texttt{A[i] <- EIList.get\_min()[0] // update priority index that satisfy the problem}\;
+\Indm
+\texttt{return A}\;
+\end{algorithm}
+
+\subsection{Runtime Analysis}
+\begin{enumerate}
+\item $O(nlogn)$: sorting by Earliest Finishing Time takes $n \cdot log n$ times as per the lecture.
+\item $O(nlogn)$: T is a list of intervals that each interval is a pair of start and finish time. There are $n$ intervals with $O(logn)$ for insertion in the priority by EST
+\item $O(nlogn)$: main loop to get $A$. the outer \texttt{for} loop iterates $n$ times. inner while loop removes $n$ intervals at worst case only once. and each extract\_min() operation would cost $O(logn)$.
+\end{enumerate}
+
+$O(nlogn)+O(nlogn)+O(nlogn)=O(nlogn)$
+Therefore. the total runtime of the algorithm is $O(nlogn)$.
+
+\subsection{Proof of Correctness}
+To prove the correctness of the algorithm:
+\begin{enumerate}
+\item $s_j \le f_k \le f_j$
+\item for every interval $cmp$ that contains $f_k$, $s_j \le s_{cmp}$.
+\end{enumerate}
+
+First, we prepared three different intervals: $T$: original list of intervals, $EFT$: intervals by earliest finish time, $EIList$: intervals by earliest start time. By definitions of EST, the first interval of EST will be assigned to each finish time as long as that finish time is less than the finish time of first interval. By definitions of EFT, the finish time of the following interval will never be within the range of its preceeding interval as we assume each start and finish is distinct.
+
+With these properties, if finish time of EST is less than the EFT finish time, then that EST interval will never be used to entail the finish time of any interval. The algorithm ensures that point with while inner loop and assigning the leftover EST interval index to $A$. By repeating this operation for the entire $n$ intervals, we can ensure both $s_j \le f_k \le f_j$ and for every interval $cmp$ that contains $f_k$, $s_j \le s_{cmp}$.
+
+Therefore, the alogrithm always outputs correctly.
+\end{document}
