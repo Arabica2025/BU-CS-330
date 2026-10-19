@@ -138,3 +138,33 @@ First, we prepared three different intervals: $T$: original list of intervals, $
 With these properties, if finish time of EST is less than the EFT finish time, then that EST interval will never be used to entail the finish time of any interval. The algorithm ensures that point with while inner loop and assigning the leftover EST interval index to $A$. By repeating this operation for the entire $n$ intervals, we can ensure both $s_j \le f_k \le f_j$ and for every interval $cmp$ that contains $f_k$, $s_j \le s_{cmp}$.
 
 Therefore, the alogrithm always outputs correctly.
+
+
+```pseudocode
+JFS(Interval: PriorityQueue[list[int,int]]) -> list[int]:
+    opt_interval <- empty nested list
+    min <- 0
+    while !Interval.isempty():
+        opt_interval[min][0] <- Interval.extract_min() // if the PQ is not empty, then there is always the leftover. initialize the interval list with the first interval
+        count <- 1 // counter for optimizing the number of visit times; counting the overlaps
+
+        while !Interval.isempty():
+            if Interval.get_min()[0] > opt_interval[min][0][1]: // if s_{i+count} ≤ f_{i}, then overlap 
+                break
+            opt_interval[min][count] <- Interval.extract_min() // we remove the previous compared interval; the final length of opt_interval will be the minimum(optimized) number of visit times
+            count <- count + 1 
+        min <- min + 1
+    
+    acceptable <- empty list[int]
+    for i in opt_interval:
+        acceptable[i] <- intersection(opt_interval[i])
+    return acceptable
+
+intersection(opt_interval_i):
+    intersect <- opt_interval_i[0][0] // initialize with first element
+    for i = 1; i < opt_interval_i.length - 1; i++ {
+        intersect <- max(intersect, opt_interval_i[i][0])
+    }
+    // intersection among the overlaps: maximum starting time among the intervals. if that equals the finish time of the first interval, be that as the intersection time.
+    return intersect
+```
