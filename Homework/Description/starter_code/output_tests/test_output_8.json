@@ -1,0 +1,39 @@
+{
+  "case_name": "Disconnected graph",
+  "gradescope_number": "1.8",
+  "dijkstra": {
+    "expected_distances": {
+      "z": "inf",
+      "s": 0.0,
+      "a": 2.0,
+      "b": 5.0,
+      "x": "inf",
+      "y": "inf"
+    },
+    "expected_implied_weighted_by_parents": {
+      "z": "inf",
+      "s": 0.0,
+      "a": 2.0,
+      "b": 5.0,
+      "x": "inf",
+      "y": "inf"
+    },
+    "expected_implied_unweighted_by_parents": {
+      "z": "inf",
+      "s": 0,
+      "a": 1,
+      "b": 2,
+      "x": "inf",
+      "y": "inf"
+    },
+    "reference_parents": {
+      "z": null,
+      "s": null,
+      "a": "s",
+      "b": "a",
+      "x": null,
+      "y": null
+    },
+    "time_seconds_reference": 6.042000000094916e-06
+  }
+}

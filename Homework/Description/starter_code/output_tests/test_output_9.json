@@ -1,0 +1,31 @@
+{
+  "case_name": "Two equally valid answers",
+  "gradescope_number": "1.9",
+  "dijkstra": {
+    "expected_distances": {
+      "s": 0.0,
+      "a": 1.0,
+      "t": 2.0,
+      "b": 1.0
+    },
+    "expected_implied_weighted_by_parents": {
+      "s": 0.0,
+      "a": 1.0,
+      "t": 2.0,
+      "b": 1.0
+    },
+    "expected_implied_unweighted_by_parents": {
+      "s": 0,
+      "a": 1,
+      "t": 2,
+      "b": 1
+    },
+    "reference_parents": {
+      "s": null,
+      "a": "s",
+      "t": "a",
+      "b": "s"
+    },
+    "time_seconds_reference": 9.29199999988306e-06
+  }
+}

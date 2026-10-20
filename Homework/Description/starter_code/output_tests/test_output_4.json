@@ -1,0 +1,35 @@
+{
+  "case_name": "Better tie discovered later",
+  "gradescope_number": "1.4",
+  "dijkstra": {
+    "expected_distances": {
+      "s": 0.0,
+      "a": 0.0,
+      "b": 0.0,
+      "t": 5.0,
+      "z": 4.0
+    },
+    "expected_implied_weighted_by_parents": {
+      "s": 0.0,
+      "a": 0.0,
+      "b": 0.0,
+      "t": 5.0,
+      "z": 4.0
+    },
+    "expected_implied_unweighted_by_parents": {
+      "s": 0,
+      "a": 1,
+      "b": 2,
+      "t": 2,
+      "z": 1
+    },
+    "reference_parents": {
+      "s": null,
+      "a": "s",
+      "b": "a",
+      "t": "z",
+      "z": "s"
+    },
+    "time_seconds_reference": 1.412499999986494e-05
+  }
+}

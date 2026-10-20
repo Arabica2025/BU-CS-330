@@ -1,0 +1,31 @@
+{
+  "case_name": "Ordinary distance improvement",
+  "gradescope_number": "1.7",
+  "dijkstra": {
+    "expected_distances": {
+      "s": 0.0,
+      "a": 2.0,
+      "b": 1.0,
+      "t": 3.0
+    },
+    "expected_implied_weighted_by_parents": {
+      "s": 0.0,
+      "a": 2.0,
+      "b": 1.0,
+      "t": 3.0
+    },
+    "expected_implied_unweighted_by_parents": {
+      "s": 0,
+      "a": 2,
+      "b": 1,
+      "t": 3
+    },
+    "reference_parents": {
+      "s": null,
+      "a": "b",
+      "b": "s",
+      "t": "a"
+    },
+    "time_seconds_reference": 1.2084000000189832e-05
+  }
+}

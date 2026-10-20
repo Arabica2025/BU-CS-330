@@ -1,0 +1,19 @@
+{
+  "case_name": "Source only",
+  "gradescope_number": "1.1",
+  "dijkstra": {
+    "expected_distances": {
+      "s": 0.0
+    },
+    "expected_implied_weighted_by_parents": {
+      "s": 0.0
+    },
+    "expected_implied_unweighted_by_parents": {
+      "s": 0
+    },
+    "reference_parents": {
+      "s": null
+    },
+    "time_seconds_reference": 2.2499999998704112e-06
+  }
+}

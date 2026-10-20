@@ -1,0 +1,31 @@
+{
+  "case_name": "Zero-weight cycle",
+  "gradescope_number": "1.6",
+  "dijkstra": {
+    "expected_distances": {
+      "s": 0.0,
+      "a": 0.0,
+      "b": 0.0,
+      "t": 1.0
+    },
+    "expected_implied_weighted_by_parents": {
+      "s": 0.0,
+      "a": 0.0,
+      "b": 0.0,
+      "t": 1.0
+    },
+    "expected_implied_unweighted_by_parents": {
+      "s": 0,
+      "a": 1,
+      "b": 2,
+      "t": 1
+    },
+    "reference_parents": {
+      "s": null,
+      "a": "s",
+      "b": "a",
+      "t": "s"
+    },
+    "time_seconds_reference": 1.033399999994522e-05
+  }
+}

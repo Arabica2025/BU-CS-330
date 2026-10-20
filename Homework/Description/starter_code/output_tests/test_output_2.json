@@ -1,0 +1,27 @@
+{
+  "case_name": "Weight before edge count",
+  "gradescope_number": "1.2",
+  "dijkstra": {
+    "expected_distances": {
+      "s": 0.0,
+      "t": 2.0,
+      "a": 1.0
+    },
+    "expected_implied_weighted_by_parents": {
+      "s": 0.0,
+      "t": 2.0,
+      "a": 1.0
+    },
+    "expected_implied_unweighted_by_parents": {
+      "s": 0,
+      "t": 2,
+      "a": 1
+    },
+    "reference_parents": {
+      "s": null,
+      "t": "a",
+      "a": "s"
+    },
+    "time_seconds_reference": 8.082999999992069e-06
+  }
+}

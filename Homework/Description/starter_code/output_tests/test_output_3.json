@@ -1,0 +1,27 @@
+{
+  "case_name": "Direct-edge tie",
+  "gradescope_number": "1.3",
+  "dijkstra": {
+    "expected_distances": {
+      "s": 0.0,
+      "t": 2.0,
+      "a": 1.0
+    },
+    "expected_implied_weighted_by_parents": {
+      "s": 0.0,
+      "t": 2.0,
+      "a": 1.0
+    },
+    "expected_implied_unweighted_by_parents": {
+      "s": 0,
+      "t": 1,
+      "a": 1
+    },
+    "reference_parents": {
+      "s": null,
+      "t": "s",
+      "a": "s"
+    },
+    "time_seconds_reference": 7.500000000160156e-06
+  }
+}

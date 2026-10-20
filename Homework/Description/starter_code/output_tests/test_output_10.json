@@ -1,0 +1,31 @@
+{
+  "case_name": "Fractional weights",
+  "gradescope_number": "1.10",
+  "dijkstra": {
+    "expected_distances": {
+      "s": 0.0,
+      "t": 1.0,
+      "a": 0.25,
+      "b": 0.25
+    },
+    "expected_implied_weighted_by_parents": {
+      "s": 0.0,
+      "t": 1.0,
+      "a": 0.25,
+      "b": 0.25
+    },
+    "expected_implied_unweighted_by_parents": {
+      "s": 0,
+      "t": 1,
+      "a": 1,
+      "b": 1
+    },
+    "reference_parents": {
+      "s": null,
+      "t": "s",
+      "a": "s",
+      "b": "s"
+    },
+    "time_seconds_reference": 1.0124999999971962e-05
+  }
+}
