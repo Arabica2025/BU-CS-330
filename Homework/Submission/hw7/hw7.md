@@ -19,7 +19,7 @@ VerifyDijkstra(G: adjacency list, s: source node, dist: distance hash table):
     // case 2: now we need to verify if the dist hash table is valid
     // First, run BFS on G so that we check every node in G, just like Dijkstra's Algorithm optimizes the shortest path by visiting every node
     opt_cand <- empty hash table
-    Q <- empty Queue
+    Q <- empty Queue // this is not a Priority Queue so there is no extract_min() or peak() operation that requires additional logrithmic runtime.
     Q.enqueue(s), opt_cand.add(s)
     while !Q.isempty():
         u <- Q.dequeue();
@@ -66,3 +66,44 @@ The algorithm above checks if those two claims hold for the distnace hash table 
 - Lastly, to check if every node on the shortest path is accounted, we run the last for loop to check if the node is in the candidate hash table and the node's weight is not $\infty$ or vise versa. 
 
 Therefore, the algorithm always verify the distance produced by Dijkstra's algorithm that $dist$ is the shortest path.
+
+## (b) parent reconstruction algorithm
+### pseudocode
+
+```
+reconstruct(G,s,dist):
+    // the maximum length of the parent hash table is the number of vertices; space: O(n)
+    parents <- initialized hash table with n null values filled // n = |V|
+
+    // loop through the adjacency table to find parents of each node that goes through shortest path
+    // dijkstra's algorithm determines the shortest path with greedy approach that selects a node of a distance that equals the sum of minimum total distance of previous node that directs to current node and the weight
+    for u in G:
+        for v in G[u]:
+            weight <- G[u][v] // weight extraction from G
+
+            // Three conditions to check
+            // 1. make sure it is not a source node; it is root such that it cannot have a parent
+            // 2. make sure we visited that node so dist[u] cannot be infinity
+            // 3. distance of current node must be equal to the sum of minimum distance of previous node and its weights
+            if v != s AND dist[u] != ∞ AND dist[v] == dist[u] + weight:
+                parents[v] <- u // update parent if passed the conditions
+    return parents
+```
+
+### Runtime analysis
+1. $O(n)$: `parents` hash table initialization. Because we have to initialize it with at most length $n$, we need to iterate through $n$ times to assign `null` value to each index of `parents`
+2. $O(n+m)$: we have to iterate through $G$ adjacency graph to check the conditions given above. while condition check only takes constant time $O(1)$, we need to check for every vertex to find the parent nodes through the shortest path possible.
+
+Therefore, the total runtime of the algorithm is $O(n) + O(n+m) = O(n+m)$.
+
+### Proof of Correctness
+To reconstruct `parents` hash table, a table that contains the parent of each node that goes through the shortest path, 
+1. we have to make sure if `dist` given is valid
+2. we have to make sure if the parent of the source node does not exist
+3. we have to make sure if all nodes in `parents` were visited  
+4. we have to make sure if the distance of child node must equal to the sum of the minimum distance of parent node and the edge weight between the child and its parent nodes. 
+
+1. Because the algorithm assumes that the output of (a) is "correct", `dist` must always be valid and contains the shortest path from the source to every node in $G$.
+2,3, and 4 are checked at if condition inside the for loop that iterates through the adjacency list $G$.
+
+Therefore, the algorithm above always reconstructs `parents` hash table that has every edge between nodes through the shortest path correctly.
