@@ -5,6 +5,8 @@
 
 \usepackage{amsmath,amsthm,amsfonts,amssymb,mathtools,latexsym}
 \usepackage{xcolor,graphicx,hyperref,float}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
 
 \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
 
@@ -34,7 +36,7 @@ Return boolean expressions to verify that all distances in $dist$ are valid shor
     \tcc{s: source vertex}
     \tcc{dist: distances from source vertex $s$ to all other vertices(hash table)}
 
-    \If{dist[s] != 0}{
+    \If{$dist[s] \ne 0$}{
         \tcc{if the source node's distance is not 0, invalid}
         return "incorrect"
     }
@@ -46,7 +48,7 @@ Return boolean expressions to verify that all distances in $dist$ are valid shor
     \For{u in G}{
         \For{v in G[u]}{
             $weight \gets G[u][v]$
-            \If{dist[v] > dist[u] + weight}{
+            \If{$dist[v] > dist[u] + weight$}{
                 return "incorrect"
             }
         }
@@ -56,32 +58,34 @@ Return boolean expressions to verify that all distances in $dist$ are valid shor
     \tcc{First, run BFS on $G$ so that we check every node in $G$, just like Dijkstra's algorithm does for shortest path by visiting every node in the graph.}
     $opt_cand \gets \text{empty hash table}$
     $Q \gets \text{empty queue}$ \tcc{this is not a Priority Queue so there is no $extract_min()$ and $decrease_key()$ operations that would require additional logrithmic runtime.}
-    Q.enqueue(s), opt_cand.add(s)
+    $Q.enqueue(s)$
+    $opt_cand.add(s)$
     \While{!Q.isEmpty()}{
         $u \gets Q.dequeue()$
 
         \For{v in G[u]}{
             $weight \gets G[u][v]$
-            \If{dist[u] == dist[v] + weight}{ \tcc{we only add the ones that are valid by the invariant $\pi(v) = d(u) + l(u,v)$}
-                \If{v not in opt_cand}{
-                    opt_cand.add(v)
-                    Q.enqueue(v)
+            \tcc{we only add the ones that are valid by the invariant: pi(v) = d(u) + l(u,v)}
+            \If{$dist[u] = dist[v] + weight$}{
+            \If{$v \notin \mathrm{opt\_cand}$}{
+                    $\mathrm{opt\_cand}.add(v)$
+                    $Q.enqueue(v)$
                 }
             }
         }
     }
 
     \tcc{now we check if the possible valid candidate hash table is correct}
-    \tcc{1. if the node is in the candidate hash table (or we included that node as one of the shortest pathways in BFS), then its weight should not be $\infty$ because we recorded the constant weight}
-    \tcc{2. otherwise, the weight should be $\infty$ because we do not go through that node for shortest path.}
-    \For{v in G}{
-        \If{v in opt_cand}{
-            \If{dist[v] == $\infty$}{
+    \tcc{1. if the node is in the candidate hash table (or we included that node as one of the shortest pathways in BFS), then its weight should not be infinity because we recorded the constant weight}
+    \tcc{2. otherwise, the weight should be infinity because we do not go through that node for shortest path.}
+\For{v in G}{
+        \If{$v \in \mathrm{opt\_cand}$}{
+            \If{$dist[v] = \infty$}{
                 return "incorrect"
             }
         }
         \Else{
-            \If{dist[v] != $\infty$}{
+            \If{$dist[v] \ne \infty$}{
                 return "incorrect"
             }
         }
@@ -100,15 +104,19 @@ Therefore, the total runtime of the algorithm above is $O(1) + O(n+m) + O(n+m) +
 
 \subsubsection{Proof of Correctness}
 For Dijkstra's algorithm to be correct:
+\begin{enumerate}
 \item $\pi(v) = min_{u \in S, v \in adj(u)} d(u) + l(u,v)$
 \item If $u \in S$, then $d(u) = \delta(s,u)$
 \item Every vertex in $G$ does not have weights of $\infty$ if it is reachable from the source vertex $s$.
+\end{enumerate}
 
 The algorithm checks if those three claims hold for the distance hash table $dist$.
 
+\begin{enumerate}
 \item The first claim is checked in the first case ($\pi(v) > min_{u \in S, v \in adj(u)} d(u) + l(u,v)$) in the algorithm to restrict upper bound of $\pi(v)$ for each node in $G$ to $\pi(v) = min_{u \in S, v \in adj(u)} d(u) + l(u,v)$.
 \item Then, with the BFS implementation to iterate through $G$ to verify the equality.
 \item Lastly, to check if every node on the shortest path is accounted, we run the last for loop to check if the node is in the candidate hash table and the node's weight is not $\infty$ or vise versa. 
+\end{enumerate}
 
 Therefore, the algorithm always verify the distance produced by Dijkstra's algorithm that $dist$ is the shortest path.
 
@@ -141,17 +149,21 @@ Therefore, the algorithm always verify the distance produced by Dijkstra's algor
 \end{algorithm}
 
 \subsubsection{Runtime Analysis}
+\begin{itemize}
 \item $O(n)$: `parents` hash table initialization. Because we have to initialize it with at most length $n$, we need to iterate through $n$ times to assign `null` value to each index of `parents`
 \item $O(n+m)$: we have to iterate through $G$ adjacency graph to check the conditions given above. while condition check only takes constant time $O(1)$, we need to check for every vertex to find the parent nodes through the shortest path possible.
+\end{itemize}
 
 Therefore, the total runtime of the algorithm is $O(n) + O(n+m) = O(n+m)$.
 
 \subsubsection{Proof of Correctness}
 To reconstruct `parents` hash table, a table that contains the parent of each node that goes through the shortest path, 
+\begin{itemize}
 \item we have to make sure if `dist` given is valid
 \item we have to make sure if the parent of the source node does not exist
 \item we have to make sure if all nodes in `parents` were visited  
 \item we have to make sure if the distance of child node must equal to the sum of the minimum distance of parent node and the edge weight between the child and its parent nodes. 
+\end{itemize}
 
 Because the algorithm assumes that the output of (a) is "correct", `dist` must always be valid and contains the shortest path from the source to every node in $G$.
 Also, 2,3, and 4 are checked at if condition inside the for loop that iterates through the adjacency list $G$.
@@ -159,14 +171,11 @@ Also, 2,3, and 4 are checked at if condition inside the for loop that iterates t
 Therefore, the algorithm above always reconstructs `parents` hash table that has every edge between nodes through the shortest path correctly.
 
 \subsection{c}
-\documentclass[tikz,border=12pt]{standalone}
-\usetikzlibrary{arrows.meta}
-
-\begin{document}
+\begin{center}
 \begin{tikzpicture}[
     >=Stealth,
     vertex/.style={circle,draw=black,thick,minimum size=10mm,inner sep=1pt,font=\large},
-    edge/.style={->,thick},
+    edge/.style={thick},
     weight/.style={fill=white,inner sep=1.5pt,font=\large}
 ]
     % Vertices
@@ -177,7 +186,7 @@ Therefore, the algorithm above always reconstructs `parents` hash table that has
     \node[vertex] (D) at (5.4,3.0) {$D$};
     \node[vertex] (E) at (6.7,0.1) {$E$};
 
-    % Weighted directed edges
+    % Weighted undirected edges
     \draw[edge] (S) -- node[weight,above] {1} (B);
     \draw[edge] (S) -- node[weight,below] {7} (A);
     \draw[edge] (B) -- node[weight,left] {3} (A);
@@ -187,4 +196,5 @@ Therefore, the algorithm above always reconstructs `parents` hash table that has
     \draw[edge] (D) -- node[weight,right] {6} (E);
     \draw[edge] (A) -- node[weight,below] {0} (E);
 \end{tikzpicture}
+\end{center}
 \end{document}
