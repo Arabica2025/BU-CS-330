@@ -26,9 +26,10 @@ VerifyDijkstra(G: adjacency list, s: source node, dist: distance hash table):
 
         for v in G[u]:
             weight <- G[u][v]
-            if dist[u] = dist[v] + weight: // we only add the ones that are valid by definition of Dijkstra's
-                opt_cand.add(v)
-                Q.enqueue(v)
+            if dist[v] = dist[u] + weight: // we only add the ones that are valid by definition of Dijkstra's
+                if v not in opt_cand:
+                    opt_cand.add(v)
+                    Q.enqueue(v)
     
     // now we check if the possible valid candidate hash table is correct
     // 1. if the node is in the candidate hash table (or we included that node as one of the shortest pathways in BFS), then its weight should not be infinity because we recorded the constant weight
@@ -59,7 +60,7 @@ For Dijkstra's Algorithm to be correct:
 3. Every vertex $\in G$ does not have weights of $\infty$ if it is in $dist$.
 
 
-The algorithm above checks if those two claims hold for the distnace hash table $dist$.
+The algorithm above checks if those three claims hold for the distnace hash table $dist$.
 
 - The first claim is checked in the first case ($\pi(v) > min_{u \in S, v \in adj(u)} d(u) + l(u,v)$) in the algorithm to restrict upper bound of $\pi(v)$ for each node in $G$ to $\pi(v) = min_{u \in S, v \in adj(u)} d(u) + l(u,v)$.
 - Then, with the BFS implementation to iterate through $G$ to verify the equality.
@@ -107,3 +108,5 @@ To reconstruct `parents` hash table, a table that contains the parent of each no
 2,3, and 4 are checked at if condition inside the for loop that iterates through the adjacency list $G$.
 
 Therefore, the algorithm above always reconstructs `parents` hash table that has every edge between nodes through the shortest path correctly.
+
+## (c)
