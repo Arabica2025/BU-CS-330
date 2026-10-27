@@ -20,7 +20,7 @@ VerifyDijkstra(G: adjacency list, s: source node, dist: distance hash table):
     // First, run BFS on G so that we check every node in G, just like Dijkstra's Algorithm optimizes the shortest path by visiting every node
     opt_cand <- empty hash table
     Q <- empty Queue // this is not a Priority Queue so there is no extract_min() or peak() operation that requires additional logrithmic runtime.
-    Q.enqueue(s), opt_cand.add(s)
+    Q.enqueue(s), opt_cand.add(s) e
     while !Q.isempty():
         u <- Q.dequeue();
 
