@@ -1,0 +1,408 @@
+\documentclass[11pt]{article}
+
+\usepackage{fullpage}
+\usepackage{enumitem}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,mathtools,latexsym}
+\usepackage{xcolor,graphicx,hyperref,float}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+
+\pdfpagewidth 8.5in
+\pdfpageheight 11in
+\oddsidemargin 0in
+\evensidemargin 0in
+
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\squigrightarrow}{\rightsquigarrow}
+
+\begin{document}
+\begin{center}
+\Large{\textbf{Homework 8}}
+\end{center}
+
+\hypertarget{maximum-clearance-routes}{%
+\section{1. Maximum Clearance Routes}\label{maximum-clearance-routes}}
+
+\hypertarget{a-cut-and-cycle-property-of-maximum-spanning-tree.}{%
+\subsection{\texorpdfstring{(a) Cut and Cycle Property of \emph{maximum}
+spanning
+tree.}{(a) Cut and Cycle Property of maximum spanning tree.}}\label{a-cut-and-cycle-property-of-maximum-spanning-tree.}}
+
+\[
+\text{Maximum Spanning tree G: a tree that connects all vertices in G }
+\text{while maximizing the sum of the edge weights in the tree.}
+\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Cut Property: Let \(i\) and \(j\) be the nodes in the two sides of a
+  cut. Let \(e\) be the maximum weight across the cut. Then \(e\) is in
+  the Maximum Spanning Tree \(G^{*}\)
+\item
+  Cycle Property: Let \(C\) be a cycle and let \(f\) be the minimum
+  weight edge in \(C\). Then, \(f\) is \emph{not} in the Maximum
+  Spanning Tree.
+\end{enumerate}
+
+\hypertarget{b-maxst-proof}{%
+\subsection{(b) MaxST Proof}\label{b-maxst-proof}}
+
+Let \(a\) be another route between \((u,v) \in G\) that has a greater
+route weight than the original edge between \((u,v)\), \(o \in G\) and
+that it creates a cycle. Then, according to the cycle property of MaxST,
+we have to choose \(a\) route to be MaxST. Here, using \(o\) route
+contradicts the cycle property. Since \(o\) is in the MaxST, \(o\) must
+have the maximum route weight; otherwise there would be contradiction in
+the cycle property. Therefore, any graph \(G\) with unique edge
+clearance and disntinct route weights, the path given by using edges
+from the maximum spanning tree of \(G\) gives the maximum clearance
+route of \(G\).
+
+\hypertarget{c-maxst-polynomial-runtime-algorithm}{%
+\subsection{(c) MaxST Polynomial runtime
+Algorithm}\label{c-maxst-polynomial-runtime-algorithm}}
+
+\hypertarget{pseudocode}{%
+\subsubsection{Pseudocode}\label{pseudocode}}
+
+\begin{algorithm}[H]
+    \small
+    \caption{MaxST($G$)}
+    \tcc{$G$: undirected, weighted adj list. Kruskal's Algoritm with edges sorted by decreasing order}
+    return ReverseKruskal($G$)\;
+\end{algorithm}
+
+\hypertarget{runtime-analysis}{%
+\subsubsection{Runtime Analysis}\label{runtime-analysis}}
+
+The above pseudocode runs Kruskal's Algorithm with sorted edges by
+decreasing order. Since the sorting edges reversely does not change the
+runtime, the total runtime of the above algorithm is same as Kruskal's
+Algorithm's runtime: \(O(mlog(m))\).
+
+\hypertarget{proof-of-correctness}{%
+\subsubsection{Proof of Correctness}\label{proof-of-correctness}}
+
+For the algorithm to always output the maximum spanning tree,
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  the output tree must correctly have the cut and cycle properties of
+  MaxST.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    the output tree must be acyclic.
+  \end{itemize}
+\item
+  all nodes must be connected
+\item
+  the sum of the edge weights of the tree in the graph \(G\) must be
+  greater than or equal to the sum of edge weights of any other spanning
+  tree in the graph \(G\).
+\end{enumerate}
+
+According to the proof of correctness of Kruskal's algorithm's first
+case that checks the existence of cycle, there exists no edge that
+creates cycle such that the output tree is always acyclic.
+
+Moreover, for all nodes to be connected, there needs to be \(n-1\) edges
+when there exists \(n\) nodes in the tree from the graph \(G\).
+Kruskal's Algorithm ensures to stop searching when \(|T| = n-1\) where
+\(T\) is the output tree as we are always given the graph \(G\) with
+distinct weights for each edge in the graph which ensures no overlaps in
+edge weights. Reversing the node alignment for searching does not affect
+the stop condition of the algorithm. Therefore, all nodes are always
+connected in the output tree.
+
+Lastly, the algorithm greedly selects nodes that does not create cycles
+from sorted edges in decreasing order. According to the cycle and cut
+properties of MaxST, there cannot be edges with minimum weights in MaxST
+and there must be edges with maximum weights in MaxST. Therefore, the
+sum of the edge wegiths in the output tree must be greater than or equal
+to any other possible spanning tree from the graph \(G\).
+
+Therefore, \texttt{MaxST(G)} always outputs the correct maximum spanning
+tree from any arbitrary graph \(G\) that has dintinct edge weights in
+each edge of it.
+
+\hypertarget{streaming-edges}{%
+\section{Streaming Edges}\label{streaming-edges}}
+
+\hypertarget{a}{%
+\subsection{(a)}\label{a}}
+
+Problem: Given \(G, T, (u,v), w(e)\), how is it possible to get a MST
+\(T'\) for the larger graph \(G'\) in time \(O(n)\) where \(n\) is the
+number of nodes in \(G\).
+
+\hypertarget{facts}{%
+\subsubsection{Facts}\label{facts}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \(G = (V,E)\): undirected graph with edge weights \(w\)
+\item
+  Already computed MinST, \(T\) for \(G\).
+\item
+  \(G'\) = \(G\) with a new edge \(e = (u,v)\) with weight \(w(e)\)
+\item
+  \(T'\) is given as a graph with the same node set as \(G\)
+\item
+  \(O(n)\) is not enough to re-read the original graph \(G\). Have to
+  explain why OK to ignore lots of the edges in \(G\).
+\end{enumerate}
+
+\hypertarget{proof}{%
+\subsubsection{Proof}\label{proof}}
+
+Getting \(G'\) by adding additional edge \(e=(u,v)\) with weight
+\(w(e)\) from the original graph \(G\) between any existing nodes in
+\(G\), \(u,v\) creates a cycle since MST from any graph is unique.
+
+To check whether we should keep the new edge \((u,v)\) and which edge to
+delete iff the new edge \((u,v)\) has the minimum weight wihtin the
+cycle \(C\), check all nodes that has edges and that create the cycle
+\(C\) from either \(u\) or \(v\) (it does not matter where to check
+from).
+
+\begin{itemize}
+\item
+  check all nodes from either \(u\) or \(v\) and see if the edge weight
+  between either \(u\) or \(v\) and any nodes in \(C\) is greater than
+  \((u,v)\).
+
+  \begin{itemize}
+  \item
+    if greater than \((u,v)\): delete the heaviest edge and keep
+    \((u,v)\) from \(T\) to create new \(T'\)
+  \item
+    else: the original \(T\) is \(T'\).
+  \end{itemize}
+\end{itemize}
+
+Because the worst case of this solution checks all nodes in the graph,
+it runs \(O(n)\) in worst case.
+
+\hypertarget{b}{%
+\subsection{(b)}\label{b}}
+
+Write a MST algorithm with lazy operations with streams.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(edge_stream\): stream data structure
+\end{enumerate}
+
+\begin{itemize}
+\item
+  \(edge_stream.has_next()\):
+
+  \begin{itemize}
+  \item
+    return type: \texttt{boolean}
+  \item
+    checks if there are more edges in the stream
+  \end{itemize}
+\item
+  \(edge_stream.next_edge()\):
+
+  \begin{itemize}
+  \item
+    return type: \texttt{pair}
+  \item
+    returns the next edge in the stream
+  \end{itemize}
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  cannot go backwards and re-read previous edges
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  store them if we want to re-access
+\end{itemize}
+
+\hypertarget{pseudocode-1}{%
+\subsubsection{Pseudocode}\label{pseudocode-1}}
+
+\begin{algorithm}[H]
+    \small
+    \caption{LazyMST($V$, $edge\_stream$)}
+    \tcc{overall idea:}
+    \tcc{1. compare weights of its available streamed edges}
+    \tcc{2. pick the minimum edge between u and vand exclude the edges that cannot be in MST or the ones we already checked}
+    \tcc{3. add it to MST}
+    $MST \gets$ empty adjacency list\;
+    \tcc{first, we need to initialize MST adj list with nodes: space: $O(n)$, time: $O(n)$}
+    \ForEach{each vertex $n$ in $V$}{
+        $MST[n] \gets$ empty list\;
+    }
+    \tcc{checking for each edge: $O(m)$}
+    \While{$edge\_stream.has\_next()$}{
+        $(u,v,w) \gets edge\_stream.next\_edge()$\;
+        $path \gets \text{partialDFS}(MST,u,v)$\;
+        \tcc{the path $u \squigrightarrow v$ found by DFS. Additional edge weight tracking added}
+        \eIf{$path = null$}{
+            $MST[u] \gets (v,w)$\;
+            $MST[v] \gets (u,w)$\;
+        }{
+            $edge \gets path[0]$\;
+            $max\_weight \gets edge[2]$\;
+            \ForEach{$parent, child, weight$ in $path$}{
+                \If{$weight > max\_weight$}{
+                    $max\_weight \gets weight$\;
+                    $edge \gets (parent, child, weight)$\;
+                }
+            }
+            \tcc{this ensures that we do not check for edges that we already checked or}
+            \tcc{that cannot be in MST so that we do not have to check it ever in the stream}
+            \If{$w < max\_weight$}{
+                remove $edge$ from both endpoint lists in $MST$\;
+                $MST[u] \gets (v,w)$\;
+                $MST[v] \gets (u,w)$\;
+            }
+        }
+    }
+    return $MST$\;
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \small
+    \caption{partialDFS($MST$, $u$, $v$)}
+    \tcc{Run DFS starting at u in the current forest. Each MST[u] entry is}
+    \tcc{(connecting nodes, weight). Return the path as a list of connected edges.}
+    \tcc{variation of original DFS; it finds the path from u to v only.}
+    $parent\_edge \gets$ hash table\;
+    \tcc{we need hash table that keeps track of edges between nodes on top of family relationship}
+    $found \gets \text{DFS-visit}(u,v)$\;
+    \tcc{boolean value to see if there exists a path}
+    \If{$found$}{
+        \tcc{if we have path, we need the subgraph S to find the optimal path in LazyMST}
+        $path \gets$ empty list\;
+        \tcc{insert all the connecting nodes between u and v}
+        $con\_nodes \gets v$\;
+        \While{$con\_nodes \ne u$}{
+            $path.append(parent\_edge[con\_nodes])$\;
+            $con\_nodes \gets parent\_edge[con\_nodes][0]$\;
+            \tcc{move to the parent endpoint}
+        }
+        \$\; return path\;
+    }
+    \tcc{if not found, then null}
+    return null\;
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \small
+    \caption{DFS-visit($u$, $v$)}
+    \tcc{base case to stop recursion}
+    \If{$u = v$}{
+        return true\;
+    }
+    \tcc{recursively search all nodes that from u to v}
+    \tcc{we may have connecting nodes between u and v}
+    \ForEach{$(con\_node,w)$ in $MST[u]$}{
+        \tcc{If the connecting node has not been visited, record its parent edge.}
+        \If{$con\_node \notin disc$}{
+            $parent\_edge[con\_node] \gets (u,con\_node,w)$\;
+            \If{$\text{DFS-visit}(con\_node,v)$}{
+                return true\;
+            }
+        }
+    }
+    return false\;
+\end{algorithm}
+
+\hypertarget{runtimespace-analysis}{%
+\subsubsection{Runtime/Space Analysis}\label{runtimespace-analysis}}
+
+\hypertarget{space}{%
+\paragraph{Space}\label{space}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \(O(n)\): we use adjacency list \texttt{MST} to store \(n\) nodes
+\item
+  \(O(n)\): \texttt{parent\_edge} takes \(n\) number of edge entries at
+  most in stream. For each node search for minimum weight, it gets
+  initialized such that it never exceeds \(O(n)\). Therefore the space
+  complexity of this algorithm is \(O(n)\).
+\end{enumerate}
+
+\hypertarget{runtime}{%
+\paragraph{Runtime}\label{runtime}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \(O(n)\): MST initialization with \(n\) entries
+\item
+  \(O(m)\): outer loop iterating through \(m\) edges in the stream
+\item
+  \(O(n)\): \texttt{partialDFS} runs \(O(n)\) times for each iteration
+  of outer loop
+\item
+  \(O(m)\): parallel to the \texttt{partialDFS} recursive call; in worst
+  case, we iterate through the entire edge.
+\end{enumerate}
+
+\(O(n) + O(m) \cdot (O(n) + O(m) (\text{where n > m})) = O(nm)\)
+Therefore, the total runtime of this algorithm is \(O(nm)\).
+
+\hypertarget{proof-of-correctness-1}{%
+\subsubsection{proof of correctness}\label{proof-of-correctness-1}}
+
+For this algorithm to always output the correct MST, the MST for each
+processed streamed edge must be a minimum spanning forest of the graph
+given formed by i edges where i is the number of processed, streamed
+edges so far.
+
+\hypertarget{proof-by-induction}{%
+\paragraph{Proof by induction}\label{proof-by-induction}}
+
+\hypertarget{base-case}{%
+\subparagraph{Base case}\label{base-case}}
+
+if the forest is empty, then it is a minimum spanning forest of the
+empty graph
+
+\hypertarget{inductive-step}{%
+\subparagraph{Inductive Step}\label{inductive-step}}
+
+\begin{itemize}
+\item
+  for \(k\)th edge \((u_k, v_k, w_k)\), if \(u_k\) and \(v_k\) are not
+  connected yet in MST, connect.
+\item
+  Otherwise, there will be cycle.
+\item
+  for any other edges that is on the path from \(u\) to \(v\), if adding
+  it to MST creates a cycle, by the cycle property of MST, the edge with
+  maximum weight within the comparison cannot be in MST.
+\item
+  So, we exclude those edges from the stream such that the minimum edge
+  weight gets preserved in each edge of the forest.
+\item
+  So, after the terminating the stream as we went through all possible
+  edges in the graph, there will only be edges with minimum edge weights
+  left.
+\end{itemize}
+
+Therefore, the algorithm always correctly computes MST.
+
+\end{document}
