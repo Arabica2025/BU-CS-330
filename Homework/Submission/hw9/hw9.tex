@@ -1,0 +1,314 @@
+\documentclass[11pt]{article}
+
+\usepackage{fullpage}
+\usepackage{enumitem}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,mathtools,latexsym}
+\usepackage{xcolor,graphicx,hyperref,float}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+
+\pdfpagewidth 8.5in
+\pdfpageheight 11in
+\oddsidemargin 0in
+\evensidemargin 0in
+
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\squigrightarrow}{\rightsquigarrow}
+\providecommand{\set}[1]{\{#1\}}
+
+\begin{document}
+\begin{center}
+\Large{\textbf{Homework 9}}
+\end{center}
+
+\hypertarget{recurrences}{%
+\section{1. Recurrences}\label{recurrences}}
+
+\hypertarget{a-a-terminates-when-n-is-a-non-negative-int}{%
+\subsection{\texorpdfstring{(a) A terminates when \(n\) is a
+non-negative
+\texttt{int}}{(a) A terminates when n is a non-negative int}}\label{a-a-terminates-when-n-is-a-non-negative-int}}
+
+Proof by Strong Induction
+
+\begin{itemize}
+\tightlist
+\item
+  Base case: \(n=0\)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    the function terminates immediately if \(n=0\) that return \(0\).
+  \end{itemize}
+\item
+  Inductive step
+
+  \begin{itemize}
+  \tightlist
+  \item
+    every odd integer input \(n>1\) returns a recursive call to even
+    input \(2(n-1)\).
+  \item
+    after dividing by 2 in even integer input case, \(n-1\).
+  \item
+    So, each odd/even call reduces the non-negative integer input by
+    \(1\).
+  \item
+    after \(2 \times n\) where \(n\) iterations where \(n\) is the
+    initial non-negative integer input, the function will eventually
+    return \(n=0\).
+  \end{itemize}
+\end{itemize}
+
+Therefore, \(A\) terminates when its input \(n\) is a non-negative
+integer.
+
+\hypertarget{b-recurrence-for-the-running-time-of-a}{%
+\subsection{(b) recurrence for the running time of
+A}\label{b-recurrence-for-the-running-time-of-a}}
+
+\(T(n) = T(n/2) + \Theta(1)\): even case
+\(T(n) = T(2(n-1)) + \Theta(1)\): odd case
+
+\hypertarget{c}{%
+\subsection{(c)}\label{c}}
+
+\[\begin{array}{ll}
+T(n/2) + \Theta(1)\\
+a=1, b=2, d=0\\
+0 = log_2(1) \rightarrow T(n) = \Theta(n^0logn)\\
+= \Theta(logn)\\
+\\
+T(2(n-1)) + \Theta(1)\\
+= \Theta(1) + 2\Theta(1) + 4\Theta(1) +...+2^{n-1}\Theta(1)\\
+= 2^n\Theta(1) = \Theta(2^n)
+\end{array}
+\]
+
+\hypertarget{d}{%
+\subsection{(d)}\label{d}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  depth: \(O(logn)\)
+\item
+  the number of leaves: \(O(1)\); exactly 1 leaf left of base case
+\end{enumerate}
+
+\hypertarget{e}{%
+\subsection{(e)}\label{e}}
+
+It computes the number of \(1\)s of the input \(n\) in binary
+expression.
+
+\begin{itemize}
+\tightlist
+\item
+  e.g.~\(10\) = \texttt{0b1010}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(A(10) \text{ where n = 10}: 2\)
+  \item
+    \(A(10) \rightarrow A(5) \rightarrow A(8) + 1(\text{ this is }\Theta(1) \text{operation}) \rightarrow A(4) \rightarrow A(2) \rightarrow A(1) + 1 \rightarrow A(0) (\text{base case reached})\)
+  \item
+    count the number of \(1\)s: \(1+1=2\).
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{carpets}{%
+\section{2. Carpets}\label{carpets}}
+
+\hypertarget{algorithm}{%
+\subsection{1. Algorithm}\label{algorithm}}
+
+\hypertarget{plain-english-version}{%
+\subsubsection{plain English version}\label{plain-english-version}}
+
+\hypertarget{io}{%
+\paragraph{I/O}\label{io}}
+
+\begin{itemize}
+\item
+  Input: \(n=2^k\) (size of the room) and coordinate
+  \((x,y) \in \set{1,...,n} \times \set{1,...,n}\) of the \(1 \times 1\)
+  covered square.
+\item
+  Output: list of carpet pieces to fill up \(2^k \times 2^k\) floor
+\end{itemize}
+
+\hypertarget{divide-and-conquer-recursive-call}{%
+\paragraph{Divide and conquer recursive
+call}\label{divide-and-conquer-recursive-call}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  divide the current square floor in 4 quadrants
+\item
+  we decide which quadrant we will recursively call by getting which
+  quadrant the input \(1 \times 1\) covered resides
+\item
+  we cover the floor of the other three quadrant without the input
+  covered tile with the matching carpet piece.
+\item
+  as we cover the floor with the matching carpet pieces depending on the
+  location of given \(1 \times 1\) cover resides, we update the
+  coordinate and its matching pieces in the list
+\item
+  we process the whole quadrants recursively with the initially added 1
+  cover for the other 3 quadrants with L-shaped cover piece at the
+  middle. stop edge case for the recursion would be to reach
+  \(1 \times 1\) grid.
+\item
+  return the cover piece list.
+\end{enumerate}
+
+\hypertarget{pseudocode}{%
+\subsubsection{Pseudocode}\label{pseudocode}}
+
+\begin{verbatim}
+carpet(n: int, cx: int, cy: int):
+    /*IO
+    Input: n: size of the floor; power of 2
+    cx: x coordianatce of the already-covered floor
+    cy: y coordinate of the already-covered floor
+
+    Output: list of tuples that contains: (x, y, L-shaped carpet piece)
+    */
+
+    // 1. base case: we stop when we don't have space to put L-shaped carpet piece
+    if n = 1: // size of 1
+        return empty list
+
+    center = n / 2 // half the size so make 4 quadrants
+    quadlist = {
+        TL = (center, center)
+        TR = (center + 1, center)
+        BL = (center, center + 1)
+        BR = (center + 1, center + 1)
+    }
+    // find which quad does (cx,cy) reside
+    if cx <= center:
+        if cy <= center:
+            quad = TL
+        else:
+            quad = BL
+    else:
+        if cy <= center:
+            quad = TR
+        else:
+            quad = BR
+    // locating other three quads; need to process all four quadrants
+    opposite = {TL: BR, TR: BL, BL: TR, BR: TL} // already-covered: opposite direction to fillup
+    fillup = quadlist[opposite[quad]] // get the coordinates of the directional l-shape cover piece
+
+    L_tiles = [(fillup.cx, fillup.cy, quad + "direction")] // output L tile
+
+    subgrid = {
+        TL: (0,0,quadlist[TL]),
+        TR: (center, 0, quadlist[TR]),
+        BL: (0, center, quadlist[BL]),
+        BR: (center,center, quadlist[BR])
+    }
+   // recursion order: first, quad that the initially given $1 \time 1$ cover resides
+   // then, do fillups at quadrants clockwise-neighbor
+    recurse_order = [quad] + [for i in subgrid: subgrid[i].key if subgrid[i].key == quad: continue]
+    
+    // divide subproblems by quad
+    for q' in recurse_order:
+        (x_offset, y_offset, center_cell) = subgrid[q']
+
+        // recurse until we reach the base case
+        if q' = quad:
+            sub_x = cx - x_offset
+            sub_y = cy - y_offset
+        else:
+            sub_x = center_cell.cx - x_offset
+            sub_y = center_cell.cy - y_offset
+
+        // recurse on smaller subproblems
+        sub_tiles = carpet(center, sub_x, sub_y)
+
+        // append the l shape tiles in the output
+        for (x, y, dir) in sub_tiles:
+            L_tiles.append(x + x_offset, y + y_offset, dir)
+    return L_tiles
+\end{verbatim}
+
+\hypertarget{proof}{%
+\subsection{proof}\label{proof}}
+
+To prove the algorithm \texttt{carpet(n,\ cx,\ cy)} is correct:
+
+\begin{itemize}
+\tightlist
+\item
+  for each recursive call:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    we get a square subgrid(subfloor) with exactly one already-covered
+    cell
+  \item
+    return tiles that cover the other cells exactly once
+  \end{itemize}
+
+  Given \(n=2^k\):
+
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \tightlist
+  \item
+    base case: \(1 \times 1\) subgrid has one already-covered cell that
+    fills up the whole subgrid: return no tiles
+  \item
+    Inductive step: assume this holds as well for \(n/2 \times n/2\)
+    subgrids.
+
+    \begin{itemize}
+    \tightlist
+    \item
+      because the algorithm checks four \(n/2 \times n/2\) subgrids to
+      check which subgrid has the input already-covered cell and put
+      exactly one \(1 \times 1\) cover for every other subgrid, the
+      claim for each recursive call holds.
+    \item
+      for each \(n/{2^k} \times n/{2^k}\) subgrids that has exactly one
+      \(1 \times 1\) cover, the leftover grid to fillup, considering we
+      only have L-shaped covers, is
+      \(\frac{(n/{2^k} \times n/{2^k})-1}{3}\). This is exactly the same
+      with the number of carpet pieces that friend gave us. Therefore,
+      there is no overlap for filling up the whole four subgrid.
+    \end{itemize}
+  \end{enumerate}
+
+  Therefore, the algorithm is always correct
+\end{itemize}
+
+\hypertarget{recurrence-for-the-worst-running-time-in-terms-of-n-and-the-running-time}{%
+\subsection{\texorpdfstring{recurrence for the worst running time in
+terms of \(n\) and the running
+time}{recurrence for the worst running time in terms of n and the running time}}\label{recurrence-for-the-worst-running-time-in-terms-of-n-and-the-running-time}}
+
+\(T(n) = 4T(n/2) + \Theta(n^2): a = 4, b = 2, d = 2\)
+
+\begin{itemize}
+\item
+  we divide into 4 subproblems (quadrants)
+\item
+  we make the problem size by half
+\item
+  tile list conversion: \(n^2\) (nested for loop)
+\end{itemize}
+
+Solve by Master method
+\(d=2=log_2(4) \rightarrow T(n) = \Theta(n^2logn)\)
+\end{document}
